@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "7352520541",
+    "project_id": "cicd-cbc90",
+    "storage_bucket": "cicd-cbc90.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:7352520541:android:ceb538c03be987982e22b4",
+        "android_client_info": {
+          "package_name": "com.example.ci_cd_tesing"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "7352520541-lgrjbqmdnuudc91g2b67g2osukpe8gl9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBHHpZJaB-k8CKkQ0-aZkdIA9cxJadtLh0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "7352520541-lgrjbqmdnuudc91g2b67g2osukpe8gl9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "7352520541-h0fs45k7ct50j9ob2ielsrv25vr2gqm4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.ciCdTesing"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
