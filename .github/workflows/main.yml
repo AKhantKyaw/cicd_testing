@@ -1,45 +1,37 @@
-name: Build & upload to Firebase App Distribution
-
+name: Builds
 on:
   push:
     branches:
       - main
+  pull_request:
+
+# Declare default permissions as read only.
+permissions: read-all
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-
+    name: Build ${{ matrix.target }}
+    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        target: ["apk --debug", "appbundle --debug", "ios --no-codesign", macos, web]
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-java@v2
+      - name: Set up JDK 11
+        uses: actions/setup-java@387ac29b308b003ca37ba93a6cab5eb57c8f5f93 # v4.0.0
         with:
-          distribution: "zulu"
-          java-version: "11"
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v1
-      - name: Decode google-services.json
-        env: 
-            GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
-        run: echo "$GOOGLE_SERVICES_JSON" > android/app/google-services.json
-      - name: Decode firebase_option
-        env:
-          firebase_options_dart: ${{secrets.FIREBASE_OPTION}}
-        run : echo "$firebase_options_dart" > lib/firebase_options.dart
+          java-version: 11
+          distribution: temurin
+      # Set up Flutter.
+      - name: Clone Flutter repository with master channel
+        uses: subosito/flutter-action@cc97e1648fff6ca5cc647fa67f47e70f7895510b
+        with:
+          channel: master
+      - run: flutter doctor -v
 
+      # Checkout gallery code and get packages.
+      - name: Checkout gallery code
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - run: flutter pub get
 
-      - name: Increase build number
-        run: perl -i -pe 's/^(version:\s+\d+\.\d+\.\d+\+)(\d+)$/$1.($2+1)/e' pubspec.yaml
-          
-      - run: flutter build apk
-#       - uses: actions/upload-artifact@v1
-#         with:
-#           name: release-apk
-#           path: build/app/outputs/apk/release/app-release.apk
-      - name: upload artifact to Firebase App Distribution
-        uses: wzieba/Firebase-Distribution-Github-Action@v1
-        with:
-            appId: ${{secrets.APPID}}
-            serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
-            groups: pre-tester
-            file: build/app/outputs/apk/release/app-release.apk
+      - run: flutter build ${{ matrix.target }}
